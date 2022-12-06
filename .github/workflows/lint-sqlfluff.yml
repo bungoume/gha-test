@@ -36,6 +36,7 @@ jobs:
 
       - name: Format files
         continue-on-error: true
+        shell: "bash {0}"  # remove -e option
         run: |
           echo "${{ steps.changed-files.outputs.all_changed_files }}"
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
