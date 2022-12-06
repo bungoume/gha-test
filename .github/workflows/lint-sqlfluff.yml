@@ -37,8 +37,10 @@ jobs:
       - name: Format files
         continue-on-error: true
         run: |
+          echo "${{ steps.changed-files.outputs.all_changed_files }}"
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            sqlfluff fix dags/sql/ -f
+            echo $file
+            # sqlfluff fix dags/sql/ -f
           done
           TMPFILE=$(mktemp)
           git diff >"${TMPFILE}"
