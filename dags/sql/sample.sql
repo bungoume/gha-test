@@ -1,3 +1,3 @@
 SELECT id
   FROM sample_db
-    LIMIT 10
+  LIMIT 10
