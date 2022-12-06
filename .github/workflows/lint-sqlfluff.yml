@@ -10,6 +10,9 @@ on:
 jobs:
   lint-models:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      REVIEWDOG_GITHUB_API_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
     steps:
       - uses: "actions/checkout@v3"
         with:
@@ -19,19 +22,25 @@ jobs:
         with:
             python-version: "3.11"
 
+      - uses: reviewdog/action-setup@v1
+
       - name: Install SQLFluff
         run: "pip install sqlfluff"
 
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v34
-        with:
-          files: |
-            dags/sql/**
+      - name: Format files
+        continue-on-error: true
+        run: |
+          sqlfluff fix dags/sql/ -f
+          TMPFILE=$(mktemp)
+          git diff >"${TMPFILE}"
+          cat ${TMPFILE}
+          git stash -u && git stash drop
+          reviewdog -f=diff --name=sqlfluff -f.diff.strip=1 -reporter="github-pr-review" < "${TMPFILE}"
 
       - name: Lint changed SQL files
         run: |
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            echo "sqlfluff lint $file"
-            # sqlfluff lint $file
-          done
+          diff-quality \
+            --violations sqlfluff \
+            --fail-under 100 \
+            --compare-branch remotes/origin/main \
+            --include "dags/sql/**"
