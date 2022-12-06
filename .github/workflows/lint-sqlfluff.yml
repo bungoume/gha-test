@@ -25,7 +25,12 @@ jobs:
         run: "pip install sqlfluff"
 
       - name: Lint changed SQL files
-        run: diff-quality --violations sqlfluff --compare-branch remotes/origin/main --include "dags/sql/**"
+        run: |
+          diff-quality \
+            --violations sqlfluff \
+            --fail-under 100 \
+            --compare-branch remotes/origin/main \
+            --include "dags/sql/**"
 
       - uses: reviewdog/action-setup@v1
 
