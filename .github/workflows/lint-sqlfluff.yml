@@ -39,8 +39,7 @@ jobs:
         run: |
           echo "${{ steps.changed-files.outputs.all_changed_files }}"
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            echo $file
-            # sqlfluff fix dags/sql/ -f
+            sqlfluff fix $file -f -i parsing,templating
           done
           TMPFILE=$(mktemp)
           git diff >"${TMPFILE}"
