@@ -33,7 +33,6 @@ jobs:
           sqlfluff fix dags/sql/ -f
           TMPFILE=$(mktemp)
           git diff >"${TMPFILE}"
-          cat ${TMPFILE}
           git stash -u && git stash drop
           reviewdog -f=diff --name=sqlfluff -f.diff.strip=1 -reporter="github-pr-review" < "${TMPFILE}"
 
