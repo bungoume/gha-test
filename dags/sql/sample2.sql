@@ -1,6 +1,6 @@
 SELECT
-  id
-  ,user
-  ,email,
+  id,
+  user,
+  email
 FROM sample_db
   LIMIT 10
