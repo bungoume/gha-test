@@ -1,2 +1,3 @@
-SELECT * FROM
-  sample_db LIMIT 10
+SELECT id
+  FROM sample_db
+    LIMIT 10
