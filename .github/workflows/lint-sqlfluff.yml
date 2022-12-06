@@ -32,6 +32,5 @@ jobs:
       - name: Lint changed SQL files
         run: |
           for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            echo "sqlfluff lint $file"
-            # sqlfluff lint $file
+            sqlfluff lint $file
           done
